@@ -1,6 +1,4 @@
 package ktk.vishdroid.atmolights_wled_demo
-
-import TestVM
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -16,12 +14,10 @@ import kotlinx.coroutines.launch
 class   MainActivity : AppCompatActivity() {
     private lateinit var wledViewModel: TestVM
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         wledViewModel = ViewModelProvider(this)[TestVM::class.java]
-
 
         // Observe WLED state response
         wledViewModel.wledState.observe(this, Observer { state ->
@@ -33,5 +29,9 @@ class   MainActivity : AppCompatActivity() {
 
         // Fetch the state when the activity is created
         wledViewModel.fetchWLEDState()
+
+        // Change color to red (example)
+        val redColor = listOf(listOf(255, 0, 0))
+        wledViewModel.setWLEDColor(redColor)
     }
 }
