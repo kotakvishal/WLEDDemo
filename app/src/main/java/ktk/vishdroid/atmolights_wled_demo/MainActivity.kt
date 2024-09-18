@@ -10,16 +10,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ktk.vishdroid.atmolights_wled_demo.databinding.ActivityMainBinding
+import kotlin.random.Random
 
 class   MainActivity : AppCompatActivity() {
     private lateinit var wledViewModel: TestVM
-
+    private lateinit var  activityMainBinding:ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(activityMainBinding.root)
         wledViewModel = ViewModelProvider(this)[TestVM::class.java]
 
-        // Observe WLED state response
         wledViewModel.wledState.observe(this, Observer { state ->
             state?.let {
                 println( "DEBUG::ATMOLIGHTS::WLED is ${if (it.on) "ON" else "OFF"}, Brightness: ${it.bri}")
@@ -31,7 +33,18 @@ class   MainActivity : AppCompatActivity() {
         wledViewModel.fetchWLEDState()
 
         // Change color to red (example)
-        val redColor = listOf(listOf(255, 0, 0))
-        wledViewModel.setWLEDColor(redColor)
+        activityMainBinding.changeColor.setOnClickListener {
+            wledViewModel.setWLEDColor(generateRandomColor())
+
+        }
+    }
+    fun generateRandomColor(): List<List<Int>> {
+        // Generate random values for Red, Green, and Blue components
+        val red = Random.nextInt(0, 256) // Random value between 0 and 255
+        val green = Random.nextInt(0, 256) // Random value between 0 and 255
+        val blue = Random.nextInt(0, 256) // Random value between 0 and 255
+
+        // Return the color in the required format
+        return listOf(listOf(red, green, blue))
     }
 }

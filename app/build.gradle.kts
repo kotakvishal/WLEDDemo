@@ -7,6 +7,8 @@ android {
     namespace = "ktk.vishdroid.atmolights_wled_demo"
     compileSdk = 34
 
+    dataBinding { enable = true }
+    viewBinding { enable = true }
     defaultConfig {
         applicationId = "ktk.vishdroid.atmolights_wled_demo"
         minSdk = 24
