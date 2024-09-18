@@ -1,35 +1,36 @@
-package ktk.vishdroid.atmolights_wled_demo
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ktk.vishdroid.atmolights_wled_demo.RetrofitClient
+import ktk.vishdroid.atmolights_wled_demo.WLEDState
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class TestVM : ViewModel() {
 
-    private val _colorChangeStatus = MutableLiveData<String>()
-    val colorChangeStatus: LiveData<String> get() = _colorChangeStatus
+    private val _wledState = MutableLiveData<WLEDState>()
+    val wledState: LiveData<WLEDState> get() = _wledState
 
     private val wledApi = RetrofitClient.instance
 
-    fun changeLightColor(hue: Int, saturation: Int, brightness: Int, effect: Int) {
-        val colorParams = "$hue,$saturation,$brightness"
-        val call = wledApi.changeLightColor(effect, colorParams)
+    fun fetchWLEDState() {
+        val call = wledApi.getWLEDState()
 
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+        call.enqueue(object : Callback<WLEDState> {
+            override fun onResponse(call: Call<WLEDState>, response: Response<WLEDState>) {
                 if (response.isSuccessful) {
-
-                    _colorChangeStatus.postValue("Color changed successfully")
+                    println("DEBUG::ATMOLIGHTS:Success: $response")
+                    _wledState.postValue(response.body())  // Update LiveData with response
                 } else {
-                    _colorChangeStatus.postValue("Failed to change color: ${response.code()}")
+                    println("DEBUG::ATMOLIGHTS:FAILED: $response")
+                    println("Failed to fetch WLED state: ${response.code()}")
                 }
             }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                _colorChangeStatus.postValue("Error: ${t.message}")
+            override fun onFailure(call: Call<WLEDState>, t: Throwable) {
+                println("DEBUG::ATMOLIGHTS:ERROR: $t")
+                t.printStackTrace()
             }
         })
     }

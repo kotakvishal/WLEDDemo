@@ -5,9 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface WLEDApi {
-    @GET("win")
-    fun changeLightColor(
-        @Query("FX") effect: Int,
-        @Query("HSB") color: String
-    ): Call<Void>
+    @GET("json/state")
+    fun getWLEDState(): Call<WLEDState>  // JSON response as WLEDState
 }

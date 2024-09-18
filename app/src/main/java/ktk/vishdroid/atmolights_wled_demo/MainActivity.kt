@@ -1,5 +1,6 @@
 package ktk.vishdroid.atmolights_wled_demo
 
+import TestVM
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -13,35 +14,24 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class   MainActivity : AppCompatActivity() {
-    private lateinit var viewModel: TestVM
+    private lateinit var wledViewModel: TestVM
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        viewModel = ViewModelProvider(this)[TestVM::class.java]
+        wledViewModel = ViewModelProvider(this)[TestVM::class.java]
 
 
-
-
-
-        // Observe the color change status
-        viewModel.colorChangeStatus.observe(this, Observer { status ->
-            Toast.makeText(this, status, Toast.LENGTH_SHORT).show()
+        // Observe WLED state response
+        wledViewModel.wledState.observe(this, Observer { state ->
+            state?.let {
+                println( "DEBUG::ATMOLIGHTS::WLED is ${if (it.on) "ON" else "OFF"}, Brightness: ${it.bri}")
+                println( "DEBUG::ATMOLIGHTS: ${it.seg[0].fx}")
+            }
         })
 
-        // Example usage: Change WLED color to red with a specific effect
-        viewModel.changeLightColor(hue = 0, saturation = 100, brightness = 255, effect = 15)
-
-
-
-
-        viewModel.colorChangeStatus.observe(this){
-            colorStateus->
-
-            Toast.makeText(this,colorStateus,Toast.LENGTH_SHORT).show()
-        }
+        // Fetch the state when the activity is created
+        wledViewModel.fetchWLEDState()
     }
-
-
 }
