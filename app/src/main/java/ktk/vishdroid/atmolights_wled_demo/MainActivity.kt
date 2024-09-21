@@ -1,4 +1,5 @@
 package ktk.vishdroid.atmolights_wled_demo
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -34,8 +35,8 @@ class   MainActivity : AppCompatActivity() {
 
         // Change color to red (example)
         activityMainBinding.changeColor.setOnClickListener {
-            wledViewModel.setWLEDColor(generateRandomColor())
-
+//            wledViewModel.setWLEDColor(generateRandomColor())
+            startActivity(Intent(this,CheckDevice::class.java))
         }
     }
     fun generateRandomColor(): List<List<Int>> {
