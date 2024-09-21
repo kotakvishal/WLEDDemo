@@ -60,4 +60,15 @@ class TestVM : ViewModel() {
             }
         })
     }
+
+    fun getDefaultAPDevice(): Device {
+        return Device(
+            address = "4.3.2.1",
+            name = "WLED AP Mode",
+            isCustomName = true,
+            isHidden = true,
+            macAddress = Device.UNKNOWN_VALUE
+        )
+    }
+    val openDeviceOrNot=MutableLiveData(false)
 }
